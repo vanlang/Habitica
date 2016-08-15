@@ -101,6 +101,18 @@ describe('analyticsService', () => {
               amplitudeNock.done();
             });
         });
+
+        it('logs unknown if headers are not passed in', () => {
+          amplitudenock
+            .filteringpath(/httpapi.*platform.*unkown.*/g, '');
+
+          delete data.headers;
+
+          return analyticsservice.track(eventtype, data)
+            .then(() => {
+              amplitudenock.done();
+            });
+        });
       });
 
       context('Operating System', () => {
@@ -132,6 +144,18 @@ describe('analyticsService', () => {
             .filteringPath(/httpapi.*os.*name.*Android.*/g, '');
 
           data.headers = {'x-client': 'habitica-android'};
+
+          return analyticsService.track(eventType, data)
+            .then(() => {
+              amplitudeNock.done();
+            });
+        });
+
+        it('sets Unkown if headers are not passed in', () => {
+          amplitudeNock
+            .filteringPath(/httpapi.*os.*name.*Unknown.*/g, '');
+
+          delete data.headers;
 
           return analyticsService.track(eventType, data)
             .then(() => {
